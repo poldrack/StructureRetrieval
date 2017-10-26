@@ -1,7 +1,7 @@
 # using example from simsem documentation
 
 library(lavaan)
-
+library(psych)
 mkdata=function(n=522){
 popModel <- "
     f1 =~ 1*y1 + 0.6*y2 + 0.7*y3
