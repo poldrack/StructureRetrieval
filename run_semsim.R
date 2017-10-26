@@ -50,14 +50,27 @@ s=simulateData(popModel,sample.nobs=n)
 return(s)
 }
 
-noisesd=1
-foo=mkdata() + noisesd*matrix(rnorm(522*18),ncol=18)
-dimest=c()
-for (i in 1:100){
-  rs=sample.int(dim(foo)[1],replace=TRUE)
-  rsdata=foo[rs,]
-  p=fa.parallel(rsdata,plot=FALSE)
-  dimest=c(dimest,p$nfact)
+getbestbic=function(data,maxn=20){
+  vss=VSS(data,n=20)
+  return(which.min(vss$vss.stats$BIC))
 }
-fa.parallel(foo)
-print(mean(dimest))
+
+noisesd=1
+dimest_bs=c()
+dimest_full=c()
+for (i in 1:100){
+  foo=mkdata() + noisesd*matrix(rnorm(522*18),ncol=18)
+  dimest=c()
+  for (j in 1:100) {
+    rs=sample.int(dim(foo)[1],replace=TRUE)
+    rsdata=foo[rs,]
+    dimest=c(dimest,getbestbic(rsdata))
+  }
+  dimest_bs=c(dimest_bs,mean(dimest))
+  dimest_full=c(dimest_full,getbestbic(foo))
+}
+
+print(mean(dimest_full))
+print(mean(dimest_bs))
+write.table(dimest_full,file=sprintf('dimest_full_sd%f.txt',noisesd))
+write.table(dimest_bs,file=sprintf('dimest_bs_sd%f.txt',noisesd))
