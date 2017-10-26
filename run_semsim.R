@@ -55,7 +55,7 @@ return(s)
 }
 
 getbestbic=function(data,maxn=20){
-  vss=VSS(data,n=20)
+  vss=VSS(data,n=20,fm='mle')
   return(which.min(vss$vss.stats$BIC))
 }
 
