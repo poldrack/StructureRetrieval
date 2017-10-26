@@ -2,6 +2,10 @@
 
 library(lavaan)
 library(psych)
+
+args=commandArgs(trailingOnly=TRUE)
+noisesd=as.numeric(args[1])
+
 mkdata=function(n=522){
 popModel <- "
     f1 =~ 1*y1 + 0.6*y2 + 0.7*y3
@@ -55,7 +59,7 @@ getbestbic=function(data,maxn=20){
   return(which.min(vss$vss.stats$BIC))
 }
 
-noisesd=1
+
 dimest_bs=c()
 dimest_full=c()
 for (i in 1:100){
